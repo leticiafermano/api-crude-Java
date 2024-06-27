@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -16,7 +17,6 @@ import static java.lang.Object.*;
 @RestController
 @RequestMapping("/jogosArcaide")
 public class apiCrudeController {
-    //private List<GamersDto> gamesList = new ArrayList<>();
     private List<GamersDto> gamesList= insertGames();
 
     private List<GamersDto> insertGames() {
@@ -34,14 +34,6 @@ public class apiCrudeController {
     public ResponseEntity<GamersDto> save(@RequestBody final GamersDto gamersDto) {
         gamesList.add(gamersDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(gamersDto);
-    }
-
-    /*
-    * Método que faz a leitura de todos os dados da lista
-    */
-    //@GetMapping("/allGames")
-    public ResponseEntity<List<GamersDto>> getAll() {
-        return ResponseEntity.ok(gamesList);
     }
 
     /*
@@ -74,9 +66,44 @@ public class apiCrudeController {
         }
     }
 
+    /*
+    * Método de atualização completa da lista
+    */
+    @PutMapping("/{id}")
+    public ResponseEntity<GamersDto> update(@PathVariable("id") final int id,
+                                            @RequestBody final GamersDto request) {
+        GamersDto gamesDto = null;
+        for(var games: gamesList) {
+            if(games.getId() == id){
+                gamesDto = games;
+            }
+        }
 
-    //UPDATE
+        if(Objects.nonNull(gamesDto)) {
+            gamesDto.setId(request.getId());
+            gamesDto.setAno(request.getAno());
+            gamesDto.setName(request.getName());
+            return ResponseEntity.ok(gamesDto);
+        }
+        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY).build();
+    }
 
-    //DELETE
+    /*
+     * Método para deletar um ítem da lista
+     */
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable("id") final int id) {
+        int index = -1;
+        for (int i = 1; i< gamesList.size(); i++) {
+            if(gamesList.get(i).getId() == id) {
+                index = i;
+                break;
+            }
+        }
 
+        if(index >= 0) {
+            gamesList.remove(index);
+        }
+        return ResponseEntity.noContent().build();
+    }
 }
