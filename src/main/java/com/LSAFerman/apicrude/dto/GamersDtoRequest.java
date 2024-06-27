@@ -1,26 +1,16 @@
 package com.LSAFerman.apicrude.dto;
 
-public class GamersDto {
-    private Integer id;
+public class GamersDtoRequest {
     private String name;
     private Integer ano;
 
-    public GamersDto() {
+    public GamersDtoRequest() {
 
     }
 
-    public GamersDto(Integer id, String name, Integer ano) {
-        this.id = id;
+    public GamersDtoRequest(Integer id, String name, Integer ano) {
         this.name = name;
         this.ano = ano;
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
     }
 
     public String getName() {
